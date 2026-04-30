@@ -57,7 +57,7 @@ const NavBar = () => {
               </Link>
             </li>
             <li>
-              <Link to="/connections">Connections</Link>
+              <a>Settings</a>
             </li>
             <li>
               <Link to="/login" onClick={handleLogout}>

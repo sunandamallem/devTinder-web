@@ -1,0 +1,88 @@
+1.u can see the connections requests which are received. 2. u can send connection requests. 3. u can ignore connection requests.
+4.u wil get all connections list
+
+GET user/requests/received gives conection received from the other
+GET user/connections gives existing conection rqwuest data
+
+we can make 2 difernt pages to get toknow request received and connections that we have.these are the 2 API's that we have.
+
+1.now lets us build a feature who all are conected ot me,i.e see all my connections at one place .
+<Route path="/connections" element=<connections/></Route>
+<Route path="/requests" element=<requests/></Route>
+
+{
+"firstName":"akshay",
+"lastName":"saini",
+"emailId":"akshaynew@gmail.com",
+"password":"akshay@1234",
+"gender":"Male"
+}
+
+# conection.jsx:
+
+import React, { useEffect } from "react";
+import { BASE_URL } from "../utils/constants";
+import { addConnections } from "../utils/connectionsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+
+const Connections = () => {
+const connections = useSelector((store) => store.connections);
+const dispatch = useDispatch();
+const fetchConnections = async () => {
+try {
+const res = await axios.get(BASE_URL + "/user/connections", {
+withCredentials: true,
+});
+dispatch(addConnections(res.data.data));
+} catch (err) {
+console.log(err);
+}
+};
+
+useEffect(() => {
+fetchConnections();
+}, []);
+
+if (!connections) return;
+
+if (connections.length === 0)
+return (
+<>
+
+<div className="text-center">No connections found</div>
+</>
+);
+return (
+<div className="text-center my-10">
+<h1 className="text-bold white text-5xl">Connections</h1>
+{connections.map((connection) => {
+const { firstName, lastName, photoUrl, age, gender, about } =
+connections;
+return (
+<div className="flex justify-centerm-4 p-4  rounded-lg bg-base-300 w-1/2 mx-auto">
+<div>
+{" "}
+<img
+                alt="photo"
+                src={photoUrl}
+                className="rounded-full w-20 h-20"
+              />
+</div>
+<div className="text-left mx-4">
+<h2 className="font-bold text-xl">
+{firstName + " " + lastName}
+</h2>
+<p>{age + " " + gender}</p>
+<p>{about}</p>
+</div>
+</div>
+);
+})}
+</div>
+);
+};
+
+export default Connections;
+
+3.let us also cerate connecrtion that i have reeived.how wil u cteate page .lets comit code til here

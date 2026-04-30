@@ -1,29 +1,59 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Provider, useDispatch } from "react-redux";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import axios from "axios";
+
+import appStore from "./utils/appStore";
+import { addUser } from "./utils/userSlice";
+import { BASE_URL } from "./utils/constants";
+
 import Body from "./components/Body";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
-import { Provider } from "react-redux";
-import appStore from "./utils/appStore";
 import Feed from "./components/Feed";
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-function App() {
-  const [count, setCount] = useState(0);
+function AppWrapper() {
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const res = await axios.get(BASE_URL + "/profile/view", {
+          withCredentials: true,
+        });
+
+        dispatch(addUser(res.data));
+      } catch (err) {
+        console.log("Not logged in");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUser();
+  }, []);
+
+  if (loading) return <h2>Loading...</h2>;
 
   return (
-    <>
-      <Provider store={appStore}>
-        <BrowserRouter base="/">
-          <Routes>
-            <Route path="/" element={<Body />}>
-              <Route path="/" element={<Feed />}></Route>
-              <Route path="/login" element={<Login />}></Route>
-              <Route path="/profile" element={<Profile />}></Route>
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </Provider>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Body />}>
+          <Route index element={<Feed />} />
+          <Route path="login" element={<Login />} />
+          <Route path="profile" element={<Profile />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+function App() {
+  return (
+    <Provider store={appStore}>
+      <AppWrapper />
+    </Provider>
   );
 }
 
