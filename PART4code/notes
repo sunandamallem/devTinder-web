@@ -85,4 +85,81 @@ return (
 
 export default Connections;
 
-3.let us also cerate connecrtion that i have reeived.how wil u cteate page .lets comit code til here
+3.let us also cerate connecrtion that i have reeived.how wil u cteate page .lets comit code til here.lets cerate requests page.
+same things to be done as like connections page i.e
+1.ceraet conection request page .
+2.vcerate store
+3.create slice .
+4.add to store.
+5.fetch the data from the request .
+6.save onto store.
+7.then show request on UI.
+
+
+request.js :
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+const Requests = () => {
+  const requests = useSelector((store) => store.requests);
+  const dispatch = useDispatch();
+  const fetchRequests = async () => {
+    try {
+      const res = await axios.get(BASE_URL + "/user/requests/received", {
+        withCredentials: true,
+      });
+      dispatch(addRequests(res.data.data));
+    } catch (err) {}
+  };
+
+  useEffect(() => {
+    fetchRequests();
+  }, []);
+
+  if (!requests) return;
+
+  if (requests.length === 0)
+    return (
+      <>
+        <div className="text-center">No requests found</div>
+      </>
+    );
+  return (
+    <div>
+      {" "}
+      <div className="text-center my-10">
+        <h1 className="text-bold white text-5xl">Connection Requests</h1>
+        {requests.map((connection) => {
+          const { firstName, lastName, photoUrl, age, gender, about } =
+            request.fromuserId;
+          return (
+            <div
+              key={_id}
+              className="flex justify-centerm-4 p-4  rounded-lg bg-base-300 w-1/2 mx-auto"
+            >
+              <div>
+                {" "}
+                <img
+                  alt="photo"
+                  src={photoUrl}
+                  className="rounded-full w-20 h-20"
+                />
+              </div>
+              <div className="text-left mx-4">
+                <h2 className="font-bold text-xl">
+                  {firstName + " " + lastName}
+                </h2>
+                <p>{age + "  " + gender}</p>
+                <p>{about}</p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+export default Requests;
+=================================================================================================================
+Add buttons to accept or reject.

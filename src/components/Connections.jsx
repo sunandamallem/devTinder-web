@@ -37,7 +37,10 @@ const Connections = () => {
         const { firstName, lastName, photoUrl, age, gender, about } =
           connections;
         return (
-          <div className="flex justify-centerm-4 p-4  rounded-lg bg-base-300 w-1/2 mx-auto">
+          <div
+            key="_userId"
+            className="flex justify-centerm-4 p-4  rounded-lg bg-base-300 w-1/2 mx-auto"
+          >
             <div>
               {" "}
               <img
